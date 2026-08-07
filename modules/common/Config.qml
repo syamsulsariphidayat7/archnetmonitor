@@ -251,6 +251,11 @@ Singleton {
                 property JsonObject netSpeed: JsonObject {
                     property bool enable: true
                     property int updateInterval: 1000
+                    property bool bits: false // Display in bits/s (x8) instead of bytes/s
+                    property bool compact: false // Short labels on the bar chip, e.g. "1.2M" instead of "1.2 MB/s"
+                    property string downloadColor: "#42a5f5" // Arrow color for download on the bar chip
+                    property string uploadColor: "#ffa726" // Arrow color for upload on the bar chip
+                    property string monitor: "btop" // Network monitor opened in a terminal when the chip is clicked; empty disables
                 }
                 property list<string> screenList: [] // List of names, like "eDP-1", find out with 'hyprctl monitors' command
                 property JsonObject utilButtons: JsonObject {
@@ -403,7 +408,7 @@ Singleton {
 
             property JsonObject notifications: JsonObject {
                 property int timeout: 7000
-                property JsonObject monitor: JsonObject {
+                property JsonObject forceMonitor: JsonObject {
                     property bool enable: false
                     property string name: "" // Name of the monitor to show notifications on, like "eDP-1". Find out with 'hyprctl monitors' command
                 }

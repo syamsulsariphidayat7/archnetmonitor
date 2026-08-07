@@ -347,4 +347,92 @@ ContentPage {
             }
         }
     }
+
+    ContentSection {
+        icon: "network_check"
+        title: Translation.tr("Net speed")
+
+        ConfigSwitch {
+            buttonIcon: "check"
+            text: Translation.tr("Enable")
+            checked: Config.options.bar.netSpeed.enable
+            onCheckedChanged: {
+                Config.options.bar.netSpeed.enable = checked;
+            }
+        }
+
+        ConfigSpinBox {
+            icon: "av_timer"
+            text: Translation.tr("Update interval (ms)")
+            value: Config.options.bar.netSpeed.updateInterval
+            from: 100
+            to: 10000
+            stepSize: 100
+            onValueChanged: {
+                Config.options.bar.netSpeed.updateInterval = value;
+            }
+        }
+
+        ConfigRow {
+            uniform: true
+            ConfigSwitch {
+                buttonIcon: "speed"
+                text: Translation.tr("Bits per second")
+                checked: Config.options.bar.netSpeed.bits
+                onCheckedChanged: {
+                    Config.options.bar.netSpeed.bits = checked;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Show speeds in bits/s (x8) instead of bytes/s")
+                }
+            }
+            ConfigSwitch {
+                buttonIcon: "compress"
+                text: Translation.tr("Compact labels")
+                checked: Config.options.bar.netSpeed.compact
+                onCheckedChanged: {
+                    Config.options.bar.netSpeed.compact = checked;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Short bar chip labels like 1.2M instead of 1.2 MB/s")
+                }
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Arrow colors")
+
+            ConfigRow {
+                uniform: true
+                MaterialTextArea {
+                    Layout.fillWidth: true
+                    placeholderText: Translation.tr("Download color (e.g., #42a5f5)")
+                    text: Config.options.bar.netSpeed.downloadColor
+                    wrapMode: TextEdit.NoWrap
+                    onTextChanged: {
+                        Config.options.bar.netSpeed.downloadColor = text;
+                    }
+                }
+                MaterialTextArea {
+                    Layout.fillWidth: true
+                    placeholderText: Translation.tr("Upload color (e.g., #ffa726)")
+                    text: Config.options.bar.netSpeed.uploadColor
+                    wrapMode: TextEdit.NoWrap
+                    onTextChanged: {
+                        Config.options.bar.netSpeed.uploadColor = text;
+                    }
+                }
+            }
+        }
+
+        MaterialTextArea {
+            Layout.fillWidth: true
+            placeholderText: Translation.tr("Monitor to open on click (e.g., btop) - empty disables")
+            text: Config.options.bar.netSpeed.monitor
+            wrapMode: TextEdit.NoWrap
+            onTextChanged: {
+                Config.options.bar.netSpeed.monitor = text;
+            }
+        }
+    }
 }

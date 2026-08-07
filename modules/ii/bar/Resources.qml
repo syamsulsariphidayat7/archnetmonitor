@@ -45,6 +45,11 @@ MouseArea {
             warningThreshold: Config.options.bar.resources.cpuWarningThreshold
         }
 
+        NetSpeedResource {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.leftMargin: 6
+        }
+
     }
 
     ResourcesPopup {

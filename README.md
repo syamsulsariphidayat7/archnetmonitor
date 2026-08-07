@@ -8,10 +8,16 @@ This is the `~/.config/quickshell/ii` config directory.
 
 ## Features on top of upstream
 
-- **NetSpeed bar widget** (`modules/ii/bar/NetSpeed.qml`) — live download/upload
-  speed next to the wifi icon, reading `/proc/net/dev` and auto-detecting the
-  default-route interface.
-- Config toggle: `Config.options.bar.netSpeed.enable` / `updateInterval`.
+- **NetSpeed indicator** — live download/upload speed shown as a **compact
+  chip in the bar's Resources widget** (next to the RAM/swap/CPU chips), plus
+  a Network detail column in the Resources hover popup. Data is polled from
+  `/proc/net/dev` by the `services/NetSpeed.qml` singleton, auto-detecting
+  the default-route interface.
+- Config options (`Config.options.bar.netSpeed`): `enable`, `updateInterval`,
+  `bits` (display in bits/s instead of bytes/s),  `compact` (short labels
+  like `1.2M` on the bar chip), `downloadColor` / `uploadColor` (arrow colors
+  on the chip), and `monitor` (network monitor opened in a terminal when the
+  chip is clicked, e.g. `btop`).
 
 ## Prerequisites
 

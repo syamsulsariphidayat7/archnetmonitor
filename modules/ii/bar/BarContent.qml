@@ -131,7 +131,6 @@ Item { // Bar content region
         BarGroup {
             id: middleCenterGroup
             anchors.verticalCenter: parent.verticalCenter
-            padding: workspacesWidget.widgetPadding
 
             Workspaces {
                 id: workspacesWidget
@@ -308,13 +307,8 @@ Item { // Bar content region
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }
-                    NetSpeed {
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.leftMargin: indicatorsRowLayout.realSpacing - 6
-                        color: rightSidebarButton.colText
-                    }
                     MaterialSymbol {
-                        Layout.leftMargin: indicatorsRowLayout.realSpacing - 6
+                        Layout.leftMargin: indicatorsRowLayout.realSpacing
                         visible: BluetoothStatus.available
                         text: BluetoothStatus.connected ? "bluetooth_connected" : BluetoothStatus.enabled ? "bluetooth" : "bluetooth_disabled"
                         iconSize: Appearance.font.pixelSize.larger

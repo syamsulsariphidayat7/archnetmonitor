@@ -90,5 +90,29 @@ StyledPopup {
                 }
             }
         }
+
+        Column {
+            visible: Config?.options.bar.netSpeed.enable ?? true
+            anchors.top: parent.top
+            spacing: 8
+
+            StyledPopupHeaderRow {
+                icon: "network_check"
+                label: "Network"
+            }
+            Column {
+                spacing: 4
+                StyledPopupValueRow {
+                    icon: "arrow_downward"
+                    label: Translation.tr("Download:")
+                    value: NetSpeed.downloadText
+                }
+                StyledPopupValueRow {
+                    icon: "arrow_upward"
+                    label: Translation.tr("Upload:")
+                    value: NetSpeed.uploadText
+                }
+            }
+        }
     }
 }
