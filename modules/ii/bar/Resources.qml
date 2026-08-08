@@ -19,9 +19,14 @@ MouseArea {
         anchors.leftMargin: 4
         anchors.rightMargin: 4
 
+        NetSpeedResource {
+            Layout.alignment: Qt.AlignVCenter
+        }
+
         Resource {
             iconName: "memory"
             percentage: ResourceUsage.memoryUsedPercentage
+            Layout.leftMargin: 6
             warningThreshold: Config.options.bar.resources.memoryWarningThreshold
         }
 
@@ -43,11 +48,6 @@ MouseArea {
                 root.alwaysShowAllResources
             Layout.leftMargin: shown ? 6 : 0
             warningThreshold: Config.options.bar.resources.cpuWarningThreshold
-        }
-
-        NetSpeedResource {
-            Layout.alignment: Qt.AlignVCenter
-            Layout.leftMargin: 6
         }
 
     }
