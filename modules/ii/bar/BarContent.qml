@@ -124,6 +124,11 @@ Item { // Bar content region
             }
         }
 
+        Item {
+            width: 150
+            height: 1
+        }
+
         VerticalBarSeparator {
             visible: Config.options?.bar.borderless
         }
@@ -151,6 +156,11 @@ Item { // Bar content region
 
         VerticalBarSeparator {
             visible: Config.options?.bar.borderless
+        }
+
+        Item {
+            width: 150
+            height: 1
         }
 
         MouseArea {
