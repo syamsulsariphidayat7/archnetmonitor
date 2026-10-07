@@ -3,7 +3,7 @@
 Phase tracker for this repo. Update after each milestone. Current phase:
 **Development**.
 
-Last updated: 2026-08-07
+Last updated: 2026-10-08
 
 ## Phase tracker
 
@@ -104,42 +104,24 @@ with the RAM/swap/CPU resources in the bar.
   use the `StdioCollector`'s own `text` property (pattern from `Network.qml`).
 - Verified: clean boot, no NetSpeed errors.
 
-### ⏳ M3 — Next steps (backlog, pick one)
+## Decisions
 
-Ideas, not commitments:
+- **2026-10-08: NetSpeed stays `ii`-only.** Porting it to the `waffle` panel
+  family was considered and deliberately rejected by the repo owner (the
+  waffle family is not used). Backlog items referencing waffle were removed
+  so this file stays honest about the project's direction.
 
-- **NetSpeed in the waffle family** — reuse the `NetSpeed` service to show
-  speed in the waffle bar/popup for parity between panel families.
-- **NetSpeed settings UI** — expose enable/interval (and future options) in the
-  settings pages (`modules/settings/`).
+## Backlog (ideas, not commitments)
+
 - **Widget enhancements:**
-  - Option to display **bits/s** (vs bytes/s) and control decimal places.
+  - Option to control decimal places in the speed formatting.
   - Hide/zero-out the popup rows when idle (no traffic).
-  - Click action to open a monitor (`btop`, `nethogs`, `bmon`).
   - History sparkline in the popup (extend the Resources popup pattern).
-- **i18n** — make any new user-visible strings translatable (see
-  `translations/tools/README.md`).
-
-### ⏳ M2 — Next steps (backlog, pick one)
-
-Ideas, not commitments:
-
-- **NetSpeed in the waffle family bar** — port the widget to the waffle bar for
-  parity between panel families.
-- **NetSpeed settings UI** — expose enable/interval (and future options) in the
-  settings pages (`modules/settings/`).
-- **Widget enhancements:**
-  - Option to display **bits/s** (vs bytes/s) and control decimal places.
-  - Hide/zero-out the widget when idle (no traffic).
-  - Click action to open a monitor (`btop`, `nethogs`, `bmon`).
-  - Popup with a short history sparkline/graph (reuse the `Resources` popup pattern).
 - **i18n** — make any new user-visible strings translatable (see
   `translations/tools/README.md`).
 
 ## Open questions / risks
 
-- NetSpeed is shown only in the `ii` family (via the Resources popup); the
-  `waffle` family has no equivalent yet.
 - `/proc/net/dev` counters wrap and reset on interface reconnects — the service
   already guards with `Math.max(0, …)`, but verify on wifi reconnect.
 - Validation depends on a live Hyprland session (no CI).
