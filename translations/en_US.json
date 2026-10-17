@@ -623,5 +623,8 @@
   "Use varying shapes for password characters": "Use varying shapes for password characters",
   "Battery full": "Battery full",
   "Pin": "Pin",
-  "Unpin": "Unpin"
+  "Unpin": "Unpin",
+  "Idle": "Idle",
+  "Keep awake on boot": "Keep awake on boot",
+  "Automatically keep system awake after reboot or new Hyprland session": "Automatically keep system awake after reboot or new Hyprland session"
 }

@@ -130,6 +130,23 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "coffee"
+        title: Translation.tr("Idle")
+
+        ConfigSwitch {
+            buttonIcon: "coffee"
+            text: Translation.tr("Keep awake on boot")
+            checked: Config.options.idle.inhibitByDefault
+            onCheckedChanged: {
+                Config.options.idle.inhibitByDefault = checked;
+            }
+            StyledToolTip {
+                text: Translation.tr("Automatically keep system awake after reboot or new Hyprland session")
+            }
+        }
+    }
+
+    ContentSection {
         icon: "language"
         title: Translation.tr("Language")
 

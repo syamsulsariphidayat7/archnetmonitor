@@ -16,9 +16,22 @@ Singleton {
     Connections {
         target: Persistent
         function onReadyChanged() {
+            if (!Persistent.ready)
+                return;
             if (!Persistent.isNewHyprlandInstance) {
                 root.inhibit = Persistent.states.idle.inhibit;
             } else {
+                root.inhibit = Config.options?.idle?.inhibitByDefault ?? false;
+                Persistent.states.idle.inhibit = root.inhibit;
+            }
+        }
+    }
+
+    Connections {
+        target: Config
+        function onReadyChanged() {
+            if (Config.ready && Persistent.ready && Persistent.isNewHyprlandInstance) {
+                root.inhibit = Config.options?.idle?.inhibitByDefault ?? false;
                 Persistent.states.idle.inhibit = root.inhibit;
             }
         }

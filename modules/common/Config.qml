@@ -343,6 +343,10 @@ Singleton {
                 property list<string> ignoredAppRegexes: []
             }
 
+            property JsonObject idle: JsonObject {
+                property bool inhibitByDefault: false // Keep system awake on boot / new Hyprland instance
+            }
+
             property JsonObject interactions: JsonObject {
                 property JsonObject scrolling: JsonObject {
                     property bool fasterTouchpadScroll: false // Enable faster scrolling with touchpad

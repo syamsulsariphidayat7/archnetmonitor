@@ -3,7 +3,7 @@
 Phase tracker for this repo. Update after each milestone. Current phase:
 **Development**.
 
-Last updated: 2026-10-08
+Last updated: 2026-10-17
 
 ## Phase tracker
 
@@ -69,6 +69,28 @@ with the RAM/swap/CPU resources in the bar.
   `bar.netSpeed.monitor` (default `btop`) in a terminal via
   `Quickshell.execDetached` (pattern from `LauncherSearch.qml`); empty string
   disables the click. Verified: `kitty -1 -e btop` launches btop.
+
+### ✅ M3 — "Keep awake on boot" idle option (done, 2026-10-17)
+
+- New config option `Config.options.idle.inhibitByDefault` (default `false`):
+  when enabled, the idle inhibitor is turned on automatically on a **new**
+  Hyprland instance (fresh boot / compositor restart), so the system stays
+  awake without toggling the quick toggle each time.
+- `services/Idle.qml`: on `Persistent.ready`, a **new** instance now seeds
+  `root.inhibit` from the config default (previously the persisted state was
+  reused verbatim); the same-instance path still restores
+  `Persistent.states.idle.inhibit`. Added a `Persistent.ready` guard to the
+  first `Connections` block, plus a second `Connections` on `Config.ready` so
+  the default is re-applied when `Config` finishes loading *after* `Persistent`
+  (avoids seeding `false` because the option tree wasn't ready yet).
+- Settings UI: new **Idle** section in `modules/settings/GeneralConfig.qml`
+  (icon `coffee`) with a single "Keep awake on boot" `ConfigSwitch`.
+- i18n keys added to `translations/en_US.json` ("Idle", "Keep awake on boot",
+  the tooltip). Other locales fall back to the English key — do **not** run
+  `manage-translations.sh sync` blindly (see M2 note).
+- Wrote `idle.inhibitByDefault: true` into the live
+  `~/.config/illogical-impulse/config.json`; validated a clean boot in the
+  running shell (no Idle/Config errors in the Quickshell log).
 
 ### ✅ Fixed pre-existing upstream warnings (done, 2026-08-07)
 
