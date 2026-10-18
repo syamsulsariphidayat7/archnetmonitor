@@ -5,7 +5,8 @@ import Quickshell
 import Quickshell.Wayland
 
 /**
- * A nice wrapper for date and time strings.
+ * Wraps the Wayland idle inhibitor. Seeded from Config.options.idle.inhibitByDefault
+ * on a new Hyprland instance, otherwise restored from Persistent state.
  */
 Singleton {
     id: root

@@ -14,10 +14,16 @@ This is the `~/.config/quickshell/ii` config directory.
   `/proc/net/dev` by the `services/NetSpeed.qml` singleton, auto-detecting
   the default-route interface.
 - Config options (`Config.options.bar.netSpeed`): `enable`, `updateInterval`,
-  `bits` (display in bits/s instead of bytes/s),  `compact` (short labels
-  like `1.2M` on the bar chip), `downloadColor` / `uploadColor` (arrow colors
-  on the chip), and `monitor` (network monitor opened in a terminal when the
-  chip is clicked, e.g. `btop`).
+  `bits` (display in bits/s instead of bytes/s, **default on**), `compact`
+  (short labels like `1.2M` on the bar chip), `downloadColor` / `uploadColor`
+  (arrow colors on the chip), and `monitor` (network monitor opened in a
+  terminal when the chip is clicked, e.g. `btop`). Clicking the chip uses
+  `Config.options.apps.terminal`, so the monitor and terminal must be installed.
+- **Idle inhibitor on boot** — `Config.options.idle.inhibitByDefault` (default
+  off, toggle in Settings → General → Idle → "Keep awake on boot") keeps the
+  system awake on a fresh boot / new Hyprland instance, without toggling the
+  quick toggle each time. On a same-instance reload the persisted state is
+  restored instead (`services/Idle.qml`).
 
 ## Prerequisites
 

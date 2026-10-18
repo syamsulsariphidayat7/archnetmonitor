@@ -9,8 +9,8 @@ import Quickshell.Io
 
 /**
  * Polls /proc/net/dev and exposes live download/upload speeds for the
- * default-route interface, plus a formatting helper. Used by the Resources
- * popup so the bar itself stays identical to upstream.
+ * default-route interface, plus a formatting helper. Consumed by the bar chip
+ * (modules/ii/bar/NetSpeedResource.qml) and the Resources popup.
  */
 Singleton {
     id: root

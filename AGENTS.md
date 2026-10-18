@@ -69,8 +69,9 @@ visible *without hovering*, which is why the old standalone
 ## Conventions
 
 - **QML formatting** is enforced by `.qmlformat.ini`: 4-space indent, no tabs,
-  max column width 110, objects spacing. Run `qmlformat --verify <file>` (or
-  `qmlformat -i <file>`) on anything you touch.
+  max column width 110, objects spacing. Check touched files with the diff
+  recipe in *Validation* below — the installed qmlformat (6.12) has no
+  `--verify` flag, and `qmlformat -i` is off-limits (see *Validation*).
 - **File naming:** components are PascalCase (e.g. `NetSpeedResource.qml`); the root
   object of every file is `id: root`.
 - **Pragmas:** singletons and stateful components use
@@ -112,9 +113,20 @@ The repo is versioned with git — keep commits small and focused.
 
 ## Validation
 
-- No automated test suite exists. Validation = `qmlformat --verify` on changed
+- No automated test suite exists. Validation = a formatting check on changed
   files, plus a live load in Quickshell inside Hyprland.
+- Formatting check (qmlformat 6.12 has **no** `--verify` flag, and the binary is
+  not on `PATH`) — format to stdout and diff:
+  ```bash
+  /usr/lib/qt6/bin/qmlformat -s .qmlformat.ini <file.qml> | diff -u <file.qml> -
+  ```
+  The tree is **not** 6.12-clean (trailing whitespace in e.g. `Resources.qml`
+  and `BarConfig.qml`, JSDoc styling), so never run `qmlformat -i` over a file
+  or the repo: it rewrites unrelated lines. Only make sure the lines you touched
+  match the surrounding style; ignore pre-existing diffs.
 - Check scripts with `bash -n` / `shellcheck` and Python with
   `python3 -m py_compile` when you touch `scripts/`.
+- Translation files: `python3 -m json.tool <file>` for JSON validity, and check
+  for duplicate keys when hand-editing.
 - Keep the working tree clean between features; update `PROGRESS.md` when a
   phase/milestone completes.
