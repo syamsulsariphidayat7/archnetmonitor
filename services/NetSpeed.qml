@@ -25,6 +25,7 @@ Singleton {
     property string uploadText: "--"
     property string downloadTextCompact: "--"
     property string uploadTextCompact: "--"
+    property bool hasSample: false
 
     function formatSpeed(bytesPerSec, compact = false) {
         const bits = Config?.options.bar.netSpeed.bits ?? false;
@@ -67,6 +68,18 @@ Singleton {
         return { rx: 0, tx: 0 };
     }
 
+    function interfaceExists(name) {
+        if (!name)
+            return false;
+        return new RegExp(`^\\s*${name}:`, "m").test(fileNetDev.text());
+    }
+
+    function refreshInterface() {
+        if (ifaceProc.running)
+            return;
+        ifaceProc.exec(ifaceProc.command);
+    }
+
     Timer {
         id: pollTimer
         interval: 1
@@ -75,7 +88,7 @@ Singleton {
         onTriggered: {
             fileNetDev.reload();
             const stats = root.parseNetDev(fileNetDev.text());
-            if (root.lastRxBytes > 0 && root.lastTxBytes > 0) {
+            if (root.hasSample) {
                 root.rxBytes = Math.max(0, stats.rx - root.lastRxBytes);
                 root.txBytes = Math.max(0, stats.tx - root.lastTxBytes);
                 const rxSpeed = root.rxBytes * 1000 / root.updateIntervalMs;
@@ -87,6 +100,7 @@ Singleton {
             }
             root.lastRxBytes = stats.rx;
             root.lastTxBytes = stats.tx;
+            root.hasSample = true;
             interval = root.updateIntervalMs;
         }
     }
@@ -98,20 +112,41 @@ Singleton {
 
     Process {
         id: ifaceProc
-        command: ["bash", "-c", "ip route | awk '/^default/ {print $5; exit}'"]
+        command: ["bash", "-c", "ip route show default | awk '/^default/{for(i=1;i<=NF;i++) if($i==\"dev\"){print $(i+1); exit}}'"]
         stdout: StdioCollector {
             onStreamFinished: {
+                const previous = root.netIface;
                 const iface = text.trim();
-                if (iface)
+                if (iface) {
                     root.netIface = iface;
+                } else if (previous !== "" && !root.interfaceExists(previous)) {
+                    // No default route and the old interface is gone: fall back to
+                    // auto-detection so a replacement interface can be picked up.
+                    root.netIface = "";
+                }
+                if (root.netIface !== previous) {
+                    root.hasSample = false;
+                    root.lastRxBytes = 0;
+                    root.lastTxBytes = 0;
+                }
             }
         }
     }
 
-    Connections {
-        target: Network
-        function onNetworkNameChanged() { ifaceProc.exec(ifaceProc.command); }
+    // Re-detect the interface periodically: the default route can move (VPN or
+    // tunnel toggled) without Network.networkName changing.
+    Timer {
+        id: ifaceTimer
+        interval: 30000
+        running: Config?.options.bar.netSpeed.enable ?? false
+        repeat: true
+        onTriggered: root.refreshInterface()
     }
 
-    Component.onCompleted: ifaceProc.exec(ifaceProc.command);
+    Connections {
+        target: Network
+        function onNetworkNameChanged() { root.refreshInterface(); }
+    }
+
+    Component.onCompleted: root.refreshInterface();
 }
