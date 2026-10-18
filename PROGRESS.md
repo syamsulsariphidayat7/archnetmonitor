@@ -63,8 +63,8 @@ with the RAM/swap/CPU resources in the bar.
   `reserveUnitText` if the link can exceed it.
 - **Colored ↓/↑ arrows on the chip** (replaces the `network_check` logo):
   `arrow_downward` in `bar.netSpeed.downloadColor` (default blue `#42a5f5`)
-  and `arrow_upward` in `bar.netSpeed.uploadColor` (default orange `#ffa726`),
-  both theme-friendly and configurable in `config.json`.
+  and `arrow_upward` in `bar.netSpeed.uploadColor` (default green `#7D9C65`
+  since M4), both theme-friendly and configurable in `config.json`.
 - **Click-to-monitor**: clicking the chip launches
   `bar.netSpeed.monitor` (default `btop`) in a terminal via
   `Quickshell.execDetached` (pattern from `LauncherSearch.qml`); empty string
@@ -104,6 +104,40 @@ with the RAM/swap/CPU resources in the bar.
   for keys absent from the live `config.json`) and the i18n warning not to run
   `manage-translations.sh sync` blindly (also recorded in M2 above).
 - Docs-only change — no QML touched, no shell reload needed.
+
+### ✅ M4 — NetSpeed hardening + pembersihan docs/i18n (done, 2026-10-19)
+
+Hasil audit setelah M3. Empat commit: `884ae28`, `d7adffe`, `63bddb1`, `f2ee968`.
+
+- **Bug: deteksi interface lewat posisi kolom.** `ip route | awk '{print $5}'`
+  salah untuk rute default tanpa gateway (VPN/tunnel, mis.
+  `default dev wg0 scope link` → kolom 5 = `scope`), sehingga chip macet di
+  `--` permanen karena regex `/proc/net/dev` tak pernah match. Sekarang awk
+  mencari token `dev`. Diuji: rute normal → `enp0s20f0u7`, sintetis wg0 → `wg0`.
+- **Bug: gate sampel pertama.** `lastRxBytes > 0 && lastTxBytes > 0` menahan
+  pembaruan teks kalau satu arah masih nol (baru boot, mesin hanya download).
+  Diganti flag `hasSample`. Sampel juga direset saat interface berganti agar
+  delta lintas interface tidak dihitung.
+- **Bug: interface tidak pernah di-refresh.** Rute default bisa berpindah tanpa
+  `Network.networkName` berubah. Ditambah deteksi ulang tiap 30 s
+  (`ifaceTimer`) + guard `ifaceProc.running` (dulu `exec()` bisa dipanggil saat
+  proses masih jalan). Kalau rute default hilang dan interface lama sudah tidak
+  ada di `/proc/net/dev`, `netIface` direset agar deteksi otomatis aktif lagi.
+- **Default `bar.netSpeed` diselaraskan dengan config live:** `bits` `false` →
+  `true` (bit/s), `uploadColor` `#ffa726` → `#7D9C65`. Placeholder warna di
+  Settings → Bar ikut disesuaikan (key i18n lama tidak dipakai locale lain).
+- **Docs:** komentar kepala `services/Idle.qml` (masih "wrapper date and time
+  strings") dan `services/NetSpeed.qml` (klaim "bar stays identical to upstream")
+  diperbaiki; README mendokumentasikan deviasi `idle.inhibitByDefault` + default
+  `bits` baru + ketergantungan terminal/monitor; AGENTS.md mengganti resep
+  `qmlformat --verify` (tidak ada di qmlformat 6.12, biner di
+  `/usr/lib/qt6/bin/`) dengan resep diff dan larangan `qmlformat -i`.
+- **i18n:** `"Network"` ditambahkan ke `en_US.json` (satu-satunya key yang hilang
+  di sumber); header Network di `ResourcesPopup.qml` dibungkus `Translation.tr()`;
+  15 key seksi NetSpeed + Idle diterjemahkan tangan ke `id_ID.json`. Locale lain
+  tetap fallback ke Inggris.
+- Belum divalidasi live: perlu reload Quickshell di Hyprland (atau boot baru)
+  untuk memastikan chip tetap normal dan `--` hanya muncul sesaat di awal.
 
 ### ✅ Fixed pre-existing upstream warnings (done, 2026-08-07)
 
@@ -158,5 +192,10 @@ with the RAM/swap/CPU resources in the bar.
 ## Open questions / risks
 
 - `/proc/net/dev` counters wrap and reset on interface reconnects — the service
-  already guards with `Math.max(0, …)`, but verify on wifi reconnect.
-- Validation depends on a live Hyprland session (no CI).
+  guards with `Math.max(0, …)` and re-detects the interface every 30 s (M4),
+  but verify on wifi reconnect / VPN toggle.
+- Interface detection depends on `ip route show default`; if the default route
+  is only present in a non-main table (policy routing), detection falls back to
+  the first non-`lo` interface in `/proc/net/dev`.
+- Validation depends on a live Hyprland session (no CI); `qmlformat` only
+  serves as a style diff, there is no syntax test.
