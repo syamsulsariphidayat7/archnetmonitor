@@ -415,7 +415,7 @@ ContentPage {
                 }
                 MaterialTextArea {
                     Layout.fillWidth: true
-                    placeholderText: Translation.tr("Upload color (e.g., #ffa726)")
+                    placeholderText: Translation.tr("Upload color (e.g., #7D9C65)")
                     text: Config.options.bar.netSpeed.uploadColor
                     wrapMode: TextEdit.NoWrap
                     onTextChanged: {
