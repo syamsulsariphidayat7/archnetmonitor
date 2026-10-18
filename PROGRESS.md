@@ -3,7 +3,7 @@
 Phase tracker for this repo. Update after each milestone. Current phase:
 **Development**.
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 ## Phase tracker
 
@@ -91,6 +91,19 @@ with the RAM/swap/CPU resources in the bar.
 - Wrote `idle.inhibitByDefault: true` into the live
   `~/.config/illogical-impulse/config.json`; validated a clean boot in the
   running shell (no Idle/Config errors in the Quickshell log).
+
+### ✅ Docs — AGENTS.md refreshed to match the shipped code (done, 2026-10-19)
+
+- The project overview still described the feature as the deleted
+  `modules/ii/bar/NetSpeed.qml` bar widget. Replaced it with the current
+  deviations from upstream (NetSpeed chip + `idle.inhibitByDefault`) and the
+  real file paths.
+- Added a **NetSpeed internals** table (service, chip, Resources host, popup,
+  settings page, Config keys) so a fresh session doesn't re-derive the layout.
+- New convention bullets: config persistence (JsonAdapter ignores QML defaults
+  for keys absent from the live `config.json`) and the i18n warning not to run
+  `manage-translations.sh sync` blindly (also recorded in M2 above).
+- Docs-only change — no QML touched, no shell reload needed.
 
 ### ✅ Fixed pre-existing upstream warnings (done, 2026-08-07)
 
