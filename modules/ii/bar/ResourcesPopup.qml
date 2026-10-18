@@ -23,7 +23,7 @@ StyledPopup {
 
             StyledPopupHeaderRow {
                 icon: "network_check"
-                label: "Network"
+                label: Translation.tr("Network")
             }
             Column {
                 spacing: 4
