@@ -3,7 +3,7 @@
 Phase tracker for this repo. Update after each milestone. Current phase:
 **Development**.
 
-Last updated: 2026-10-19
+Last updated: 2026-11-06
 
 ## Phase tracker
 
@@ -91,6 +91,44 @@ with the RAM/swap/CPU resources in the bar.
 - Wrote `idle.inhibitByDefault: true` into the live
   `~/.config/illogical-impulse/config.json`; validated a clean boot in the
   running shell (no Idle/Config errors in the Quickshell log).
+
+### ✅ M5 — Custom settings page: NetSpeed + Idle + Transparency (done, 2026-11-06)
+
+- New **Custom** page (`modules/settings/CustomConfig.qml`, registered in
+  `settings.qml` after Services) that groups every fork-specific setting in one
+  place:
+  - **Net speed** — moved out of `BarConfig.qml`.
+  - **Idle** ("Keep awake on boot") — moved out of `GeneralConfig.qml`.
+  - **Transparency** — full controls for the upstream `appearance.transparency`
+    tree (upstream only exposed the enable toggle on the Quick page).
+- Transparency section contents: enable / automatic switches, manual
+  background + content spinboxes (0–100 %, step 5), and four presets that set
+  *both* keys: Subtle 15/25, Light 35/40, Medium 60/50, Heavy 80/60
+  (background/content). The active preset is highlighted (radio icon +
+  `colPrimaryContainer`); the status line switches to
+  "Custom: background X%, content Y%" when the values match no preset, so
+  presets and manual spinboxes stay visually in sync.
+- Moved, not duplicated: the original sections were removed from
+  `BarConfig.qml` / `GeneralConfig.qml` / `InterfaceConfig.qml`, so each config
+  key has exactly one control. `InterfaceConfig.qml` is now byte-identical to
+  HEAD apart from the pre-existing trailing blank line.
+- Semantics confirmed while wiring the UI: `backgroundTransparency` feeds
+  `Appearance.colors.colLayer0` (bar, sidebar bodies, overlays);
+  `contentTransparency` feeds `colLayer1..4` (buttons, cards, popups inside
+  those surfaces). An earlier attempt to add a separate `bar.backgroundOpacity`
+  option was reverted — the bar already uses `colLayer0`, so a second knob only
+  duplicated state.
+- No changes to `Bar.qml` / `BarContent.qml` / `SidebarLeft.qml` /
+  `SidebarRightContent.qml`: they already read `Appearance.colors.colLayer0`,
+  so the settings page drives them without touching those files.
+- i18n: 21 new keys in `translations/en_US.json` (page name, intro line,
+  transparency controls, presets), mirrored by hand into `id_ID.json`; other
+  locales fall back to English via `Translation.tr()`.
+- Validation: `qmlformat` diff fully clean for `CustomConfig.qml`; the other
+  touched files only show pre-existing upstream formatting noise;
+  `quickshell -p settings.qml` with `currentPage` forced to the Custom page
+  loads with no `CustomConfig` errors; `python3 -m json.tool` + duplicate-key
+  check pass on both locale files.
 
 ### ✅ Docs — AGENTS.md refreshed to match the shipped code (done, 2026-10-19)
 

@@ -19,6 +19,17 @@ Deliberate deviations from upstream (both data-driven, defaults live in
   `/proc/net/dev` for the default-route interface.
 - **Idle** — `idle.inhibitByDefault` keeps the system awake on a fresh boot /
   new Hyprland instance, without toggling the quick toggle each time.
+- **Settings → Custom page** — `modules/settings/CustomConfig.qml` collects every
+  fork-specific surface in one page: **Net speed** (moved from Settings → Bar),
+  **Idle** keep-awake (moved from Settings → General), and **Transparency**
+  (upstream only exposed the enable toggle on the Quick page). When adding a new
+  fork feature, put its settings here instead of spreading them across upstream
+  pages.
+- **Transparency semantics** — `backgroundTransparency` drives
+  `Appearance.colors.colLayer0` (bar, sidebar bodies, overlays);
+  `contentTransparency` drives `colLayer1..4` (buttons, cards, popups). Do not
+  add per-surface opacity options for the bar/sidebars — they already read
+  `colLayer0` and would duplicate state.
 
 See the `NetSpeed internals` table below for the files that make up the widget.
 
