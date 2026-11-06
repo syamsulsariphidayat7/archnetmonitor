@@ -55,6 +55,11 @@ ApplicationWindow {
             component: "modules/settings/ServicesConfig.qml"
         },
         {
+            name: Translation.tr("Custom"),
+            icon: "tune",
+            component: "modules/settings/CustomConfig.qml"
+        },
+        {
             name: Translation.tr("Advanced"),
             icon: "construction",
             component: "modules/settings/AdvancedConfig.qml"
